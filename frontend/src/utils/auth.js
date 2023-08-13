@@ -43,10 +43,7 @@ class AuthApi {
 }
 
 const authApi = new AuthApi({
-  baseUrl: 'https://api.kznv.alex.nomoreparties.co',
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  baseUrl: 'https://api.kznv.alex.nomoreparties.co'
 });
 
 export default authApi;
