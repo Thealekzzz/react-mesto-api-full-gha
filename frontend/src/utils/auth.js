@@ -17,7 +17,7 @@ class AuthApi {
       headers: this.headers,
       body: JSON.stringify({ email, password })
     });
-    
+
     return this._checkResponce(res);
   }
 
@@ -27,16 +27,19 @@ class AuthApi {
       headers: this.headers,
       body: JSON.stringify({ email, password })
     });
-    
+
     return this._checkResponce(res);
   }
 
   async auth(token) {
     const res = await fetch(this.baseUrl + "/users/me", {
       method: "GET",
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        token,
+      },
     });
-    
+
     return this._checkResponce(res);
   }
 
@@ -45,7 +48,8 @@ class AuthApi {
 const authApi = new AuthApi({
   baseUrl: 'https://api.kznv.alex.nomoreparties.co',
   headers: {
-    'Content-Type': 'application/json'
+    'content-type': 'application/json',
+    'token': localStorage.getItem('token'),
   }
 });
 

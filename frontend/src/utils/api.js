@@ -90,7 +90,11 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: 'https://api.kznv.alex.nomoreparties.co'
+    baseUrl: 'https://api.kznv.alex.nomoreparties.co',
+    headers: {
+        'content-type': 'application/json',
+        'token': localStorage.getItem('token'),
+    }
 });
 
 export default api;

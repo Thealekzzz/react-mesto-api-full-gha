@@ -155,9 +155,9 @@ function App() {
     authApi.auth(token)
       .then(data => {
         setIsLoggedIn(true);
-        setEmail(data.data.email);
+        setEmail(data.email);
       })
-      .catch(err => {
+      .catch(() => {
         console.log("Ошибка при проверке токена");
       });
   }
