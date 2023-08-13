@@ -1,0 +1,13 @@
+.form__label {
+  width: 358px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .form__label {
+    width: 100%;
+  }
+}
