@@ -34,10 +34,7 @@ class AuthApi {
   async auth(token) {
     const res = await fetch(this.baseUrl + "/users/me", {
       method: "GET",
-      headers: {
-        ...this.headers,
-        "Authorization": "Bearer " + token,
-      }
+      headers: this.headers,
     });
     
     return this._checkResponce(res);
@@ -46,7 +43,7 @@ class AuthApi {
 }
 
 const authApi = new AuthApi({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'https://api.kznv.alex.nomoreparties.co',
   headers: {
     'Content-Type': 'application/json'
   }

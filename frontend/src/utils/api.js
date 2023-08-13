@@ -90,11 +90,7 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: 'http://localhost:3000',
-    // headers: {
-    //     authorization: 'ac0330d2-fd1e-41e2-91b1-03d95834cae1',
-    //     'Content-Type': 'application/json'
-    // }
+    baseUrl: 'https://api.kznv.alex.nomoreparties.co'
 });
 
 export default api;
