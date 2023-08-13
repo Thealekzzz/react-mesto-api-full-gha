@@ -4,7 +4,11 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const { NODE_ENV, PRIVATE_KEY } = process.env;
 
 function auth(req, res, next) {
-  const { token } = req.headers;
+  let { token } = req.cookies || {};
+
+  if (!token) {
+    token = req.headers.token;
+  }
 
   if (!token) {
     next(new UnauthorizedError('Необходима авторизация'));
