@@ -11,76 +11,103 @@ class Api {
         return Promise.reject(`Ошибка ${res.status}`);
     }
 
-    async getInitialCards() {
+    async getInitialCards(token) {
         const res = await fetch(`${this.baseUrl}/cards`, {
-            headers: this.headers
+            headers: {
+                ...this.headers,
+                token,
+            },
         });
         return this._checkResponce(res);
     }
 
-    async getUserData() {
+    async getUserData(token) {
         const res = await fetch(`${this.baseUrl}/users/me`, {
-            headers: this.headers
+            headers: {
+                ...this.headers,
+                token,
+            },
         });
         return this._checkResponce(res);
     }
 
-    async patchUserData(userData) {
+    async patchUserData(token, userData) {
         const res = await fetch(`${this.baseUrl}/users/me`, {
             method: "PATCH",
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
             body: JSON.stringify(userData)
         });
         return this._checkResponce(res);
     }
 
-    async addCard(cardData) {
+    async addCard(token, cardData) {
         const res = await fetch(`${this.baseUrl}/cards`, {
             method: "POST",
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
             body: JSON.stringify(cardData)
         });
         return this._checkResponce(res);
     }
 
-    async removeCard(cardId) {
+    async removeCard(token, cardId) {
         const res = await fetch(`${this.baseUrl}/cards/${cardId}`, {
             method: "DELETE",
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
         });
         return this._checkResponce(res);
     }
 
-    async changeLikeCardStatus(cardId, status) {
+    async changeLikeCardStatus(token, cardId, status) {
         const method = status ? "PUT" : "DELETE";
         const res = await fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
             method,
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
         });
 
         return this._checkResponce(res);
     }
 
-    async likeCard(cardId) {
+    async likeCard(token, cardId) {
         const res = await fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
             method: "PUT",
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
         });
         return this._checkResponce(res);
     }
 
-    async unlikeCard(cardId) {
+    async unlikeCard(token, cardId) {
         const res = await fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
             method: "DELETE",
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
         });
         return this._checkResponce(res);
     }
 
-    async updateAvatar(url) {
+    async updateAvatar(token, url) {
         const res = await fetch(`${this.baseUrl}/users/me/avatar`, {
             method: "PATCH",
-            headers: this.headers,
+            headers: {
+                ...this.headers,
+                token,
+            },
             body: JSON.stringify({
                 avatar: url
             })

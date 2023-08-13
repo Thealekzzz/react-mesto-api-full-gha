@@ -19,7 +19,6 @@ import ValidationOptionsContext from '../contexts/ValidationOptionsContext';
 import ProtectedRouteElement from './ProtectedRoute';
 import Login from './Login';
 import Registration from './Registration';
-import authApi from '../utils/auth';
 
 function App() {
   const navigate = useNavigate();
@@ -34,14 +33,14 @@ function App() {
   const [isEditAvatarPopupLoading, setIsEditAvatarPopupLoading] = useState(false);
   const [isDeleteCardPopupLoading, setIsDeleteCardPopupLoading] = useState(false);
 
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [currentUser, setCurrentUser] = useState({});
-  const [email, setEmail] = useState("");
 
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
   const [cardToDelete, setCardToDelete] = useState({});
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
 
   function handleEditAvatarClick() {
@@ -76,10 +75,10 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(id => id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked)
+    api.changeLikeCardStatus(token, card._id, !isLiked)
       .then(newCard => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
       })
@@ -90,7 +89,7 @@ function App() {
 
   function handleCardDelete(card) {
     setIsDeleteCardPopupLoading(true);
-    api.removeCard(card._id)
+    api.removeCard(token, card._id)
       .then(() => {
         setCards(prev => prev.filter((c) => c._id !== card._id));
         setCardToDelete({});
@@ -107,7 +106,7 @@ function App() {
   function handleUpdateUser(userData) {
     setIsEditProfilePopupLoading(true);
 
-    api.patchUserData(userData)
+    api.patchUserData(token, userData)
       .then(data => {
         setCurrentUser(data);
         closeAllPopups();
@@ -123,7 +122,7 @@ function App() {
 
   function handleUpdateAvatar(data) {
     setIsEditAvatarPopupLoading(true);
-    api.updateAvatar(data.avatar)
+    api.updateAvatar(token, data.avatar)
       .then(data => {
         setCurrentUser(data);
         closeAllPopups();
@@ -138,7 +137,7 @@ function App() {
 
   function handleAddPlaceSubmit(newCard) {
     setIsAddPlacePopupLoading(true);
-    api.addCard(newCard)
+    api.addCard(token, newCard)
       .then(data => {
         setCards(prev => [data, ...prev]);
         closeAllPopups();
@@ -151,21 +150,10 @@ function App() {
       });
   }
 
-  function verifyToken(token) {
-    authApi.auth(token)
-      .then(data => {
-        setIsLoggedIn(true);
-        setEmail(data.email);
-      })
-      .catch(() => {
-        console.log("Ошибка при проверке токена");
-      });
-  }
-
   function handleLogin(data) {
     localStorage.setItem("token", data.token);
+    setToken(data.token);
     setIsLoggedIn(true);
-    verifyToken(data.token);
   }
 
   function handleLogout() {
@@ -177,15 +165,16 @@ function App() {
   }
 
   useEffect(() => {
-    api.getUserData()
+    api.getUserData(token)
       .then(data => {
         setCurrentUser(data);
       })
       .catch(err => {
+        setIsLoggedIn(false);
         console.log("Ошибка получения данных пользователя");
       });
 
-    api.getInitialCards()
+    api.getInitialCards(token)
       .then(cards => {
         setCards(cards);
       })
@@ -193,17 +182,13 @@ function App() {
         console.log("Ошибка получения фотографий");
       });
 
-    if (localStorage.getItem("token")) {
-      verifyToken(localStorage.getItem("token"));
-    }
-  }, []);
-
+  }, [token]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <IsUserLoggedContext.Provider value={isLoggedIn}>
         <div className="page">
-          <Header onLogout={handleLogout} email={email} />
+          <Header onLogout={handleLogout} email={currentUser.email} />
           <Routes>
             <Route
               path="/"
