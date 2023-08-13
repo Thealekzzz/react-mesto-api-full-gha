@@ -13,7 +13,7 @@ const Card = require('../models/card');
 const getCards = (req, res, next) => {
   Card.find({})
     .then((data) => {
-      res.status(OK).send(data);
+      res.status(OK).send(data.reverse());
     })
     .catch(next);
 };
