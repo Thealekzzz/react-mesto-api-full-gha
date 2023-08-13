@@ -9,7 +9,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 158.160.97.156
+IP 158.160.97.156
 
 Frontend https://kznv.alex.nomoreparties.co/
 
