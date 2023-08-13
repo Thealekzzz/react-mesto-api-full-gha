@@ -78,29 +78,7 @@ class Api {
 
         return this._checkResponce(res);
     }
-
-    async likeCard(token, cardId) {
-        const res = await fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
-            method: "PUT",
-            headers: {
-                ...this.headers,
-                token,
-            },
-        });
-        return this._checkResponce(res);
-    }
-
-    async unlikeCard(token, cardId) {
-        const res = await fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
-            method: "DELETE",
-            headers: {
-                ...this.headers,
-                token,
-            },
-        });
-        return this._checkResponce(res);
-    }
-
+    
     async updateAvatar(token, url) {
         const res = await fetch(`${this.baseUrl}/users/me/avatar`, {
             method: "PATCH",
